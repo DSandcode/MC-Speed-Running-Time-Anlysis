@@ -1,3 +1,4 @@
+from os import replace
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
@@ -22,14 +23,44 @@ def mcsr_csv_maker(url, key):
     leaderboard = soup.findAll("td")
     r_txt = "Rank,Player,Real time,In-game time,Time,Version,Difficulty,F3,Mods,Date,,"
     for it in leaderboard:
+        # print(it.text)
         r_txt += (
             it.text if it.text != "" else "" if "small" in it.attrs["class"] else "None"
         )
         r_txt += ","
 
     df = pd.read_csv(io.StringIO(r_txt.replace(",,", "\n")), sep=",")
+
+    df["Player"] = df["Player"].apply(lambda x: x[0 : len(x) // 2])
+
+    df["Date"] = df["Date"].apply(lambda x: x.replace(" ", ""))
+    df["Date"] = pd.to_datetime(df["Date"], format="%d%b%Y")
+
+    df["Real time"] = df["Real time"].apply(convert_to_ms)
+    df["In-game time"] = df["In-game time"].apply(convert_to_ms)
+
+    df["Real time"] = pd.to_timedelta(df["Real time"], unit="ms")
+    df["In-game time"] = pd.to_timedelta(df["In-game time"], unit="ms")
+
     df.to_csv("./data/versions/{}.csv".format(key), index=False)
 
 
+def convert_to_ms(str):
+    lst = [
+        int(i[:-2])
+        if i[-2] == "ms"
+        else int(i[:-1]) * 3600000
+        if i[-1] == "h"
+        else int(i[:-1]) * 60000
+        if i[-1] == "m"
+        else int(i[:-1]) * 1000
+        if i[-1] == "s" and i[-2] != "m"
+        else 0
+        for i in str.split()
+    ]
+    return sum(lst)
+
+
+# mcsr_csv_maker(urls["JMCSR_Any_SS_1.9-"], "JMCSR_Any_SS_1.9-")
 for key, url in urls.items():
     mcsr_csv_maker(url, key)
