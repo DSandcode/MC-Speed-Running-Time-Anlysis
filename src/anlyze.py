@@ -47,13 +47,29 @@ def plot_mean(df, ax, df_name="Mean"):
     plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
 
 
+def plot_count(df, ax, df_name="count"):
+    df["RTime"] = df["Real time"].values.astype(np.int64)
+    df["IGTime"] = df["In-game time"].values.astype(np.int64)
+    r_df1 = df.groupby("Version").count()
+    r_df1 = r_df1.sort_values(by="RTime")
+    ax.bar(
+        list(range(len(r_df1["RTime"]))), r_df1["IGTime"], tick_label=r_df1.index,
+    )
+    ax.set_xlabel("Minecraft Version")
+    ax.set_ylabel("Count of runs")
+    ax.set_title(df_name)
+    plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
+
+
 def plot_data(dfs, names, axs):
     # Goes through the Dataframes and plots them
     for df, name, ax in zip(dfs, names, axs.flatten(),):
         # fig, z = plt.subplots()
         convert_to_units(df)
-        plot_mean(df, ax, name)
+        # plot_mean(df, ax, name)
+        plot_count(df, ax, name)
         # plt.savefig("./images/version_means/{}.png".format(name))
+        # plt.savefig("./images/version_count/{}.png".format(name))
 
 
 # Makes the subplots
@@ -64,11 +80,16 @@ def plot_data(dfs, names, axs):
 #     ["JMCSR_AnyGl_RS", "JMCSR_AnyGl_SS", "JMCSR_Any_RS", "JMCSR_Any_SS"],
 #     axs,
 # )
-fig, ax = plt.subplots()
-convert_to_units(JMCSR_all)
-plot_mean(JMCSR_all, ax, "JMCSR_all")
+
+# fig, ax = plt.subplots()
+# convert_to_units(JMCSR_all)
+# plot_mean(JMCSR_all, ax, "JMCSR_all")
+# plot_count(JMCSR_all, ax, "JMCSR_all")
+
 # Saves the images
 plt.tight_layout()
-plt.savefig("./images/version_means/speedrunVersionAVGall.png")
+# plt.savefig("./images/version_means/speedrunVersionAVGall.png")
 # plt.savefig("./images/version_means/speedrunAVGVersiontime.png")
-# plt.show()
+# plt.savefig("./images/version_count/speedrunCountVersion.png")
+# plt.savefig("./images/version_count/speedrunCountVersionall.png")
+plt.show()
