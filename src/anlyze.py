@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 
+# Gets the data from the CSV
 JMCSR_AnyGl_RS, JMCSR_AnyGl_SS, JMCSR_Any_RS, JMCSR_Any_SS = (
     pd.read_csv("./data/combined/JMCSR_AnyGl_RS.csv"),
     pd.read_csv("./data/combined/JMCSR_AnyGl_SS.csv"),
@@ -10,13 +11,14 @@ JMCSR_AnyGl_RS, JMCSR_AnyGl_SS, JMCSR_Any_RS, JMCSR_Any_SS = (
     pd.read_csv("./data/combined/JMCSR_Any_SS.csv"),
 )
 
-
+# Once the data is gotten the columns are not in the right data type so this changes them to it
 def convert_to_units(df):
     df["Date"] = pd.to_datetime(df["Date"])
     df["Real time"] = pd.to_timedelta(df["Real time"])
     df["In-game time"] = pd.to_timedelta(df["In-game time"])
 
 
+# This calculates the Mean and standard deviation and returns them as Dataframe
 def avg_STD_for_version(df, group):
     df["RTime"] = df["Real time"].values.astype(np.int64)
     df["IGTime"] = df["In-game time"].values.astype(np.int64)
@@ -29,6 +31,7 @@ def avg_STD_for_version(df, group):
     return r_df1, r_df2
 
 
+# Plots the mean in minutes
 def plot_mean(df, ax, df_name="Mean"):
     mean_df, std_df = avg_STD_for_version(df, "Version")
     mean_df = mean_df.sort_values(by="RTime")
@@ -40,18 +43,24 @@ def plot_mean(df, ax, df_name="Mean"):
     ax.set_xlabel("Minecraft Version")
     ax.set_ylabel("Average Time (Min)")
     ax.set_title(df_name)
-    plt.xticks(rotation="vertical")
+    plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
 
 
-convert_to_units(JMCSR_AnyGl_RS)
-convert_to_units(JMCSR_AnyGl_SS)
-convert_to_units(JMCSR_Any_RS)
-convert_to_units(JMCSR_Any_SS)
-for df, name in zip(
+# Makes the subplots
+fig, axs = plt.subplots(2, 2, sharey=True)
+
+# Goes through the Dataframes and plots them
+for df, name, ax in zip(
     [JMCSR_AnyGl_RS, JMCSR_AnyGl_SS, JMCSR_Any_RS, JMCSR_Any_SS],
     ["JMCSR_AnyGl_RS", "JMCSR_AnyGl_SS", "JMCSR_Any_RS", "JMCSR_Any_SS"],
+    axs.flatten(),
 ):
-    fig, ax_mean = plt.subplots()
-    plot_mean(df, ax_mean, name)
-    plt.savefig("./images/version_means/{}".format(name))
-plt.show()
+    # fig, z = plt.subplots()
+    convert_to_units(df)
+    plot_mean(df, ax, name)
+    # plt.savefig("./images/version_means/{}.png".format(name))
+
+# Saves the images
+plt.tight_layout()
+plt.savefig("./images/version_means/speedrunAVGVersiontime.png")
+# plt.show()
