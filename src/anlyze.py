@@ -4,11 +4,12 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 
 # Gets the data from the CSV
-JMCSR_AnyGl_RS, JMCSR_AnyGl_SS, JMCSR_Any_RS, JMCSR_Any_SS = (
+JMCSR_AnyGl_RS, JMCSR_AnyGl_SS, JMCSR_Any_RS, JMCSR_Any_SS, JMCSR_all = (
     pd.read_csv("./data/combined/JMCSR_AnyGl_RS.csv"),
     pd.read_csv("./data/combined/JMCSR_AnyGl_SS.csv"),
     pd.read_csv("./data/combined/JMCSR_Any_RS.csv"),
     pd.read_csv("./data/combined/JMCSR_Any_SS.csv"),
+    pd.read_csv("./data/combined/JMCSR_all.csv"),
 )
 
 # Once the data is gotten the columns are not in the right data type so this changes them to it
@@ -46,21 +47,28 @@ def plot_mean(df, ax, df_name="Mean"):
     plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
 
 
+def plot_data(dfs, names, axs):
+    # Goes through the Dataframes and plots them
+    for df, name, ax in zip(dfs, names, axs.flatten(),):
+        # fig, z = plt.subplots()
+        convert_to_units(df)
+        plot_mean(df, ax, name)
+        # plt.savefig("./images/version_means/{}.png".format(name))
+
+
 # Makes the subplots
-fig, axs = plt.subplots(2, 2, sharey=True)
+# fig, axs = plt.subplots(2, 2, sharey=True)
 
-# Goes through the Dataframes and plots them
-for df, name, ax in zip(
-    [JMCSR_AnyGl_RS, JMCSR_AnyGl_SS, JMCSR_Any_RS, JMCSR_Any_SS],
-    ["JMCSR_AnyGl_RS", "JMCSR_AnyGl_SS", "JMCSR_Any_RS", "JMCSR_Any_SS"],
-    axs.flatten(),
-):
-    # fig, z = plt.subplots()
-    convert_to_units(df)
-    plot_mean(df, ax, name)
-    # plt.savefig("./images/version_means/{}.png".format(name))
-
+# plot_data(
+#     [JMCSR_AnyGl_RS, JMCSR_AnyGl_SS, JMCSR_Any_RS, JMCSR_Any_SS],
+#     ["JMCSR_AnyGl_RS", "JMCSR_AnyGl_SS", "JMCSR_Any_RS", "JMCSR_Any_SS"],
+#     axs,
+# )
+fig, ax = plt.subplots()
+convert_to_units(JMCSR_all)
+plot_mean(JMCSR_all, ax, "JMCSR_all")
 # Saves the images
 plt.tight_layout()
-plt.savefig("./images/version_means/speedrunAVGVersiontime.png")
+plt.savefig("./images/version_means/speedrunVersionAVGall.png")
+# plt.savefig("./images/version_means/speedrunAVGVersiontime.png")
 # plt.show()

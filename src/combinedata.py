@@ -29,7 +29,12 @@ JMCSR_AnyGl_RS, JMCSR_AnyGl_SS, JMCSR_Any_RS, JMCSR_Any_SS = (
     (JMCSR_Any_RS_1o9t.append(JMCSR_Any_RS_p1o9)).sort_values("Real time"),
     (JMCSR_Any_SS_1o9t.append(JMCSR_AnyGl_SS_p1o9)).sort_values("Real time"),
 )
+JMCSR_all = (
+    JMCSR_AnyGl_RS.append(JMCSR_AnyGl_SS.append(JMCSR_Any_RS.append(JMCSR_Any_SS)))
+).sort_values("Real time")
+
 JMCSR_AnyGl_RS.to_csv("./data/combined/JMCSR_AnyGl_RS.csv", index=False)
 JMCSR_AnyGl_SS.to_csv("./data/combined/JMCSR_AnyGl_SS.csv", index=False)
 JMCSR_Any_RS.to_csv("./data/combined/JMCSR_Any_RS.csv", index=False)
 JMCSR_Any_SS.to_csv("./data/combined/JMCSR_Any_SS.csv", index=False)
+JMCSR_all.to_csv("./data/combined/JMCSR_all.csv", index=False)
