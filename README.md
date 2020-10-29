@@ -36,3 +36,5 @@ After seeing the images above I wonder what would be faster, Glitchless or Glitc
 
 Null: Neither version of Speedrunning is significatly faster then the other.
 Alternate: Glitched Minecraft Speedruns are faster then Glitchless Minecraft Speedruns.
+
+significance level = 5%
