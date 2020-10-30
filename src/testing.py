@@ -91,9 +91,14 @@ def welch_test_statistic(sample_1, sample_2):
 fig, ax_1 = plt.subplots()
 fig, ax_2 = plt.subplots()
 fig, ax_compare = plt.subplots(2, sharex=True, sharey=True)
-for df, ax, ax2 in zip([JMCSR_Any, JMCSR_AnyGl], [ax_1, ax_2], ax_compare.flatten()):
+for df, ax, name, ax2 in zip(
+    [JMCSR_Any, JMCSR_AnyGl],
+    [ax_1, ax_2],
+    ["Glitched", "Glitchless"],
+    ax_compare.flatten(),
+):
     # plot_bootstrap(df, ax)
-    plot_bootstrap(df, ax2)
+    plot_bootstrap(df, ax2, name)
 plt.savefig("./images/hypotesting/bootstraptest.png")
 plt.tight_layout()
 # plt.show()

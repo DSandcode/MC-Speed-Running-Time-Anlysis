@@ -33,6 +33,7 @@ I then wanted to combine some of the Tables so that I can compare the data of di
 After seeing the images above I wonder what would be faster, Glitchless or Glitched speedruns.
 
 Null: Neither version of Speedrunning is significantly faster then the other.
+
 Alternate: Glitched Minecraft Speedruns are faster then Glitchless Minecraft Speedruns.
 
 significance level = 5%
@@ -40,8 +41,11 @@ significance level = 5%
 !['bootstraptest'](images/hypotesting/bootstraptest.png)
 
 Test results:
-    0.04066640645942682 0.03318517320541225
-    1920.7514999618993 -552.9625199007932
-    Ttest_indResult(statistic=-552.685969485946, pvalue=0.0)
+ - Standard Error of the Means
+   - Glitched: 0.04066640645942682 
+   - Glitchless: 0.03318517320541225
+ - Degree: 1920.7514999618993 
+ - Tests stat: -552.9625199007932
+ - p value: 0.0
 
-Since the p value is under the significant value the null hypotheses is rejected.
+Since the p value is under the significant value, the null hypotheses is rejected.
