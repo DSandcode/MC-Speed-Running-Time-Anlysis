@@ -59,3 +59,7 @@ Test results:
  - p value: 0.0
 
 Since the p value is under the significant value, the null hypotheses is rejected.
+
+# Next
+
+What more I could do is test what version of Minecraft are faster to speedrun.
