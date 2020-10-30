@@ -66,6 +66,7 @@ try:
     os.mkdir("./data/versions/")
 except:
     pass
+
 # mcsr_csv_maker(urls["JMCSR_Any_SS_1.9-"], "JMCSR_Any_SS_1.9-")
 for key, url in urls.items():
     mcsr_csv_maker(url, key)
