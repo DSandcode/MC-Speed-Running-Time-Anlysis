@@ -70,14 +70,46 @@ def welch_test_statistic(sample_1, sample_2):
     return numerator / np.sqrt(denominator_sq)
 
 
-# fig, ax_1 = plt.subplots()
-# fig, ax_2 = plt.subplots()
-# fig, ax_compare = plt.subplots(2)
-# for df, ax, ax2 in zip([JMCSR_Any, JMCSR_AnyGl], [ax_1, ax_2], ax_compare.flatten()):
-#     plot_bootstrap(df, ax)
-#     plot_bootstrap(df, ax2)
-# plt.savefig("./images/hypotesting/bootstraptest.png")
+def welch_satterhwaithe_df(sample_1, sample_2):
+    ss1 = len(sample_1)
+    ss2 = len(sample_2)
+    df = ((np.var(sample_1) / ss1 + np.var(sample_2) / ss2) ** (2.0)) / (
+        (np.var(sample_1) / ss1) ** (2.0) / (ss1 - 1)
+        + (np.var(sample_2) / ss2) ** (2.0) / (ss2 - 1)
+    )
+    return df
+
+
+def welch_test_statistic(sample_1, sample_2):
+    numerator = np.mean(sample_1) - np.mean(sample_2)
+    denominator_sq = (np.var(sample_1) / len(sample_1)) + (
+        np.var(sample_2) / len(sample_2)
+    )
+    return numerator / np.sqrt(denominator_sq)
+
+
+fig, ax_1 = plt.subplots()
+fig, ax_2 = plt.subplots()
+fig, ax_compare = plt.subplots(2, sharex=True, sharey=True)
+for df, ax, ax2 in zip([JMCSR_Any, JMCSR_AnyGl], [ax_1, ax_2], ax_compare.flatten()):
+    # plot_bootstrap(df, ax)
+    plot_bootstrap(df, ax2)
+plt.savefig("./images/hypotesting/bootstraptest.png")
+plt.tight_layout()
 # plt.show()
 # Test wether the difference is significant
-print(welch_test_statistic(bootstrap_test(JMCSR_Any), bootstrap_test(JMCSR_AnyGl)))
+boot_any, boot_anygl = bootstrap_test(JMCSR_Any), bootstrap_test(JMCSR_AnyGl)
+
+sem_any, sem_anygl = stats.sem(boot_any), stats.sem(boot_anygl)
+degoffree = welch_satterhwaithe_df(boot_any, boot_anygl)
+teststat = welch_test_statistic(boot_any, boot_anygl)
+p_val = stats.ttest_ind(boot_any, boot_anygl)
+print(sem_any, sem_anygl)
+print(degoffree, teststat)
+print(p_val)
+plt.show()
+# print(welch_test_statistic(boot_any, boot_anygl))
 # -556.0919156975093
+# 0.03995593835054164 0.033410421929411814
+# 1937.2897306025372 -556.8467828075966
+# Ttest_indResult(statistic=-556.5682897755202, pvalue=0.0)

@@ -8,9 +8,7 @@ When I was exploring the website it didn't go to a special url for the data. So 
 
 I then cleaned the data up and made Panda dataframes out of the data. After that I wrote them down to CSV so I didn't have to be constantly requesting from the server.
 
-I wanted to combine some of the Tables so that I can compare the data. So I combined the tables into there respective groups and one that is all of the data. 
-
-## Analyzing
+I then wanted to combine some of the Tables so that I can compare the data of different types of speedrunning.
 
 ## Images
 
@@ -32,9 +30,18 @@ I wanted to combine some of the Tables so that I can compare the data. So I comb
 
 ## Hypothesis
 
-After seeing the images above I wonder what would be faster, Glitchless or Glitched.
+After seeing the images above I wonder what would be faster, Glitchless or Glitched speedruns.
 
-Null: Neither version of Speedrunning is significatly faster then the other.
+Null: Neither version of Speedrunning is significantly faster then the other.
 Alternate: Glitched Minecraft Speedruns are faster then Glitchless Minecraft Speedruns.
 
 significance level = 5%
+
+!['bootstraptest'](images/hypotesting/bootstraptest.png)
+
+Test results:
+    0.04066640645942682 0.03318517320541225
+    1920.7514999618993 -552.9625199007932
+    Ttest_indResult(statistic=-552.685969485946, pvalue=0.0)
+
+Since the p value is under the significant value the null hypotheses is rejected.
