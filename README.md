@@ -10,6 +10,38 @@ I then cleaned the data into Panda dataframes. After that I wrote them down to C
 
 I then wanted to combine some of the Tables so that I can compare the data of different types of speedrunning.
 
+```Python
+def mcsr_csv_maker(url, key):
+    # Make the request to the server
+    response = requests.get(url)
+    # takes the response and put it through BeautifulSoup
+    soup = BeautifulSoup(response.text, "html.parser")
+    # Gets all the table data
+    leaderboard = soup.findAll("td")
+    # The string where the data is put
+    r_txt = "Rank,Player,Real time,In-game time,Time,Version,Difficulty,F3,Mods,Date,,"
+    # Loops through the TD and adds them to the string
+    for it in leaderboard:
+        r_txt += (
+            it.text if it.text != "" else "" if "small" in it.attrs["class"] else "None"
+        )
+        r_txt += ","
+    # Reads the string made above as a CSV to make a Dataframe
+    df = pd.read_csv(io.StringIO(r_txt.replace(",,", "\n")), sep=",")
+    # Makes sure the name is correct
+    df["Player"] = df["Player"].apply(lambda x: x[0 : len(x) // 2])
+    # Turns the date into correct form
+    df["Date"] = df["Date"].apply(lambda x: x.replace(" ", ""))
+    df["Date"] = pd.to_datetime(df["Date"], format="%d%b%Y")
+    # Makes the time into time deltas
+    df["Real time"] = df["Real time"].apply(convert_to_ms)
+    df["In-game time"] = df["In-game time"].apply(convert_to_ms)
+    df["Real time"] = pd.to_timedelta(df["Real time"], unit="ms")
+    df["In-game time"] = pd.to_timedelta(df["In-game time"], unit="ms")
+    # Writes the Dataframe to a csv file
+    df.to_csv("./data/versions/{}.csv".format(key), index=False)
+```
+
 ## Intial look
 
 I didn't know what to test at first so I decide to graph the times to see what I could look into.
@@ -44,7 +76,7 @@ After seeing the images above I started wondering what would be faster, Glitchle
 
 Null: Neither version of Speedrunning is significantly faster then the other.
 
-Alternate: Glitched Minecraft Speedruns are faster then Glitchless Minecraft Speedruns.
+Alternate: Either Glitched or Glitchless speedruns are faster.
 
 significance level = 5%
 
@@ -58,7 +90,7 @@ Test results:
  - Tests stat: -552.9625199007932
  - p value: 0.0
 
-Since the p value is under the significant value, the null hypotheses is rejected.
+Glitched Minecraft speedruns are significantly faster thean glitchless speedruns since the p value is under the significant value, so the null hypotheses is rejected.
 
 # Next
 
